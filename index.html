@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codec Configuration</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #171717;
+        color: #cccccc;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: #3d3d3d;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #3971ed 0%, #159b46 100%);
+        color: #cccccc;
+        padding: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .content {
+        padding: 40px;
+      }
+
+      .codec-section {
+        background: #171717;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border-left: 5px solid #3971ed;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .codec-section:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .codec-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .codec-title h3 {
+        color: #cccccc;
+        font-size: 1.3rem;
+      }
+
+      .remove-btn {
+        background: #dd2626;
+        color: #cccccc;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        font-size: 0.9rem;
+      }
+
+      .remove-btn:hover {
+        background: #991b1b;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        color: #cccccc;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+      }
+
+      .form-group input,
+      .form-group select {
+        padding: 12px 15px;
+        border: 2px solid #3d3d3d;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        background: #3d3d3d;
+        color: #cccccc;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #3971ed;
+        box-shadow: 0 0 0 3px rgba(57, 113, 237, 0.2);
+      }
+
+      .form-group input[type="password"] {
+        font-family: monospace;
+      }
+
+      .controls {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin: 30px 0;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 140px;
+        background: #3d3d3d;
+        color: #cccccc;
+      }
+
+      .btn-primary {
+        background: #3971ed;
+        color: #cccccc;
+        box-shadow: 0 5px 15px rgba(57, 113, 237, 0.3);
+      }
+
+      .btn-primary:hover {
+        background: #2563eb;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(57, 113, 237, 0.4);
+      }
+
+      .btn-success {
+        background: #159b46;
+        color: #cccccc;
+        box-shadow: 0 5px 15px rgba(21, 155, 70, 0.3);
+      }
+
+      .btn-success:hover {
+        background: #10803d;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(21, 155, 70, 0.4);
+      }
+
+      .preview {
+        background: #171717;
+        color: #cccccc;
+        padding: 25px;
+        border-radius: 15px;
+        margin-top: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        border: 1px solid #3d3d3d;
+      }
+
+      .preview h3 {
+        color: #3971ed;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+      }
+
+      .preview pre {
+        background: #3d3d3d;
+        padding: 20px;
+        border-radius: 10px;
+        overflow-x: auto;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        border: 1px solid #159b46;
+        color: #cccccc;
+      }
+
+      .empty-state {
+        text-align: center;
+        color: #cccccc;
+        font-style: italic;
+        padding: 40px;
+        opacity: 0.7;
+      }
+
+      @media (max-width: 768px) {
+        .content {
+          padding: 20px;
+        }
+
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .controls {
+          flex-direction: column;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Codec Configuration</h1>
+        <p>Configure your devices and generate the devices.json file</p>
+      </div>
+
+      <div class="content">
+        <div id="codecs-container"></div>
+
+        <div class="controls">
+          <button class="btn btn-primary" onclick="addCodec()">
+            Add Codec
+          </button>
+          <button class="btn btn-success" onclick="generateJSON()">
+            Generate devices.json
+          </button>
+        </div>
+
+        <div class="preview">
+          <h3>JSON Preview:</h3>
+          <pre id="json-preview">No codec configured</pre>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let codecCounter = 0
+      let codecs = {}
+
+      const hardwareTypes = [
+        "GATEWAY_4",
+        "SCOOP_6",
+        "ENCODER_H264",
+        "DECODER_H264",
+        "SWITCH_IP",
+        "ROUTER_4G",
+        "AUTRE",
+      ]
+
+      function addCodec() {
+        codecCounter++
+        const codecId = `codec_${codecCounter.toString().padStart(2, "0")}`
+
+        codecs[codecId] = {
+          hardware_type: "GATEWAY_4",
+          ctrl_ip_address: "",
+          ctrl_ip_port: "80",
+          ctrl_ip_user: "admin",
+          ctrl_ip_password: "",
+          hardware_custom_name: "",
+        }
+
+        renderCodecs()
+        updatePreview()
+      }
+
+      function removeCodec(codecId) {
+        delete codecs[codecId]
+        renderCodecs()
+        updatePreview()
+      }
+
+      function renderCodecs() {
+        const container = document.getElementById("codecs-container")
+
+        if (Object.keys(codecs).length === 0) {
+          container.innerHTML =
+            '<div class="empty-state">Click "Add Codec" to get started</div>'
+          return
+        }
+
+        container.innerHTML = Object.keys(codecs)
+          .map(
+            (codecId) => `
+                <div class="codec-section">
+                    <div class="codec-title">
+                        <h3>${codecId.toUpperCase()}</h3>
+                        <button class="remove-btn" onclick="removeCodec('${codecId}')">Remove</button>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="${codecId}_hardware_type">Hardware Type:</label>
+                            <select id="${codecId}_hardware_type" onchange="updateCodec('${codecId}', 'hardware_type', this.value)">
+                                ${hardwareTypes
+                                  .map(
+                                    (type) =>
+                                      `<option value="${type}" ${
+                                        codecs[codecId].hardware_type === type
+                                          ? "selected"
+                                          : ""
+                                      }>${type}</option>`
+                                  )
+                                  .join("")}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="${codecId}_ctrl_ip_address">IP Address:</label>
+                            <input type="text" id="${codecId}_ctrl_ip_address" 
+                                   value="${codecs[codecId].ctrl_ip_address}" 
+                                   placeholder="192.168.1.100"
+                                   onchange="updateCodec('${codecId}', 'ctrl_ip_address', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label for="${codecId}_ctrl_ip_port">Port:</label>
+                            <input type="text" id="${codecId}_ctrl_ip_port" 
+                                   value="${codecs[codecId].ctrl_ip_port}" 
+                                   placeholder="80"
+                                   onchange="updateCodec('${codecId}', 'ctrl_ip_port', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label for="${codecId}_ctrl_ip_user">Username:</label>
+                            <input type="text" id="${codecId}_ctrl_ip_user" 
+                                   value="${codecs[codecId].ctrl_ip_user}" 
+                                   placeholder="admin"
+                                   onchange="updateCodec('${codecId}', 'ctrl_ip_user', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label for="${codecId}_ctrl_ip_password">Password:</label>
+                            <input type="password" id="${codecId}_ctrl_ip_password" 
+                                   value="${codecs[codecId].ctrl_ip_password}" 
+                                   placeholder="••••••••"
+                                   onchange="updateCodec('${codecId}', 'ctrl_ip_password', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label for="${codecId}_hardware_custom_name">Custom Name:</label>
+                            <input type="text" id="${codecId}_hardware_custom_name" 
+                                   value="${
+                                     codecs[codecId].hardware_custom_name
+                                   }" 
+                                   placeholder="My device"
+                                   onchange="updateCodec('${codecId}', 'hardware_custom_name', this.value)">
+                        </div>
+                    </div>
+                </div>
+            `
+          )
+          .join("")
+      }
+
+      function updateCodec(codecId, field, value) {
+        codecs[codecId][field] = value
+        updatePreview()
+      }
+
+      function updatePreview() {
+        const preview = document.getElementById("json-preview")
+        if (Object.keys(codecs).length === 0) {
+          preview.textContent = "No codec configured"
+        } else {
+          preview.textContent = JSON.stringify(codecs, null, 2)
+        }
+      }
+
+      function generateJSON() {
+        if (Object.keys(codecs).length === 0) {
+          alert("Please add at least one codec before generating the file.")
+          return
+        }
+
+        const jsonData = JSON.stringify(codecs, null, 2)
+        const blob = new Blob([jsonData], { type: "application/json" })
+        const url = URL.createObjectURL(blob)
+
+        const a = document.createElement("a")
+        a.href = url
+        a.download = "devices.json"
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+
+        alert("devices.json file downloaded successfully!")
+      }
+
+      // Initialize with one example codec
+      addCodec()
+    </script>
+  </body>
+</html>
